@@ -1,0 +1,9 @@
+Main.class
+service\AutoRepairRepository.class
+domain\Worker.class
+domain\RepairRequest.class
+domain\Department.class
+domain\Car.class
+service\AutoRepairRepositoryImpl.class
+domain\AutoRepair.class
+domain\RepairType.class
