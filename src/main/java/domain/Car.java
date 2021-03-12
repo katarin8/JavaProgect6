@@ -8,6 +8,7 @@ import lombok.Setter;
 @Setter
 public class Car {
     private String name;
-    private int priceKoeff;
-    private int timeKoeff;
+    private int num;
+    private int primarySpeed;
+    private Road rd;
 }

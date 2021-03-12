@@ -1,11 +1,11 @@
-import domain.Worker;
+import domain.Road;
 import org.junit.Test;
 
 public class DemoTest {
     @Test
     public void test1 () {
-        Worker worker = new Worker();
-        worker.setName("Ivanov");
-        System.out.println(worker.getName());
+        Road worker = new Road();
+        worker.setId(1);
+        System.out.println(worker.getId());
     }
 }
