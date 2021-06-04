@@ -1,10 +1,10 @@
 package app.repository.impl;
 
 
-import app.domain.model.Automobile;
+import app.domain.model.Cars;
 import app.domain.model.TrafficLight;
-import app.repository.RoadBlockRepository;
-import app.repository.TrafficLightRepository;
+import app.repository.RoadBlockRepo;
+import app.repository.TrafficLightRepo;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
@@ -13,14 +13,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import java.util.List;
 import java.util.Optional;
 
-public class TrafficLightRepositoryImpl2 implements TrafficLightRepository {
+public class TrafficLightRepoImpl2 implements TrafficLightRepo {
     private final SessionFactory sessionFactory;
-    private final RoadBlockRepository roadBlockRepository;
+    private final RoadBlockRepo roadBlockRepo;
 
     @Autowired
-    public TrafficLightRepositoryImpl2(SessionFactory sessionFactory, RoadBlockRepository roadBlockRepository) {
+    public TrafficLightRepoImpl2(SessionFactory sessionFactory, RoadBlockRepo roadBlockRepo) {
         this.sessionFactory = sessionFactory;
-        this.roadBlockRepository = roadBlockRepository;
+        this.roadBlockRepo = roadBlockRepo;
     }
 
 
@@ -34,7 +34,7 @@ public class TrafficLightRepositoryImpl2 implements TrafficLightRepository {
         session.close();
 
         for (int i = 0; i < result.getControlledBlocks().size(); i++) {
-            result.getControlledBlocks().set(i, roadBlockRepository.get(result.getControlledBlocks().get(i).getId()).get());
+            result.getControlledBlocks().set(i, roadBlockRepo.get(result.getControlledBlocks().get(i).getId()).get());
         }
 
         return Optional.of(result);
@@ -54,7 +54,7 @@ public class TrafficLightRepositoryImpl2 implements TrafficLightRepository {
 
         result.forEach(res -> {
             for (int i = 0; i < res.getControlledBlocks().size(); i++) {
-                res.getControlledBlocks().set(i, roadBlockRepository.get(res.getControlledBlocks().get(i).getId()).get());
+                res.getControlledBlocks().set(i, roadBlockRepo.get(res.getControlledBlocks().get(i).getId()).get());
             }
         });
 
@@ -83,7 +83,7 @@ public class TrafficLightRepositoryImpl2 implements TrafficLightRepository {
     public void delete(Long id) {
         var session = sessionFactory.openSession();
         var trans = session.beginTransaction();
-        var curr = session.get(Automobile.class, id);
+        var curr = session.get(Cars.class, id);
         session.delete(curr);
         trans.commit();
         session.close();

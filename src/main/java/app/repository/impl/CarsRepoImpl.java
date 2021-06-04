@@ -1,8 +1,8 @@
 package app.repository.impl;
 
-import app.domain.model.Automobile;
-import app.repository.AutomobileRepository;
-import app.repository.RoadBlockRepository;
+import app.domain.model.Cars;
+import app.repository.CarsRepo;
+import app.repository.RoadBlockRepo;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
@@ -14,23 +14,23 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public class AutomobileRepositoryImpl implements AutomobileRepository {
+public class CarsRepoImpl implements CarsRepo {
 
     private final SessionFactory sessionFactory;
 
-    private final RoadBlockRepository roadBlockRepository;
+    private final RoadBlockRepo roadBlockRepo;
 
 
     @Autowired
-    public AutomobileRepositoryImpl(SessionFactory sessionFactory, RoadBlockRepository roadBlockRepository) {
+    public CarsRepoImpl(SessionFactory sessionFactory, RoadBlockRepo roadBlockRepo) {
         this.sessionFactory = sessionFactory;
-        this.roadBlockRepository = roadBlockRepository;
+        this.roadBlockRepo = roadBlockRepo;
     }
 
     @Override
-    public Optional<Automobile> get(Long id) {
+    public Optional<Cars> get(Long id) {
         Session session = sessionFactory.openSession();
-        var result = session.get(Automobile.class, id);
+        var result = session.get(Cars.class, id);
 
         if (result.getRoadBlock() instanceof HibernateProxy) {
             var proxy = (HibernateProxy) result.getRoadBlock();
@@ -44,27 +44,14 @@ public class AutomobileRepositoryImpl implements AutomobileRepository {
     }
 
     @Override
-    public List<Automobile> getAll() {
+    public List<Cars> getAll() {
         Session session = sessionFactory.openSession();
-        var query = session.createQuery("from automobiles", Automobile.class);
-        List<Automobile> result = query.getResultList();
+        var query = session.createQuery("from automobiles", Cars.class);
+        List<Cars> result = query.getResultList();
 
         result.forEach(res -> {
-//            if (res.getRoadBlock() instanceof HibernateProxy) {
-//                var proxy = (HibernateProxy) res.getRoadBlock();
-//                if (proxy != null){
-//                    proxy.getHibernateLazyInitializer().getImplementation();
-//
-//                    if (res.getRoadBlock().getRightBlock() != null) {
-//                        var leftProxy
-//                    }
-//
-//
-//                }
-//            }
-
             if (res.getRoadBlock() != null)
-                res.setRoadBlock(roadBlockRepository.get(res.getRoadBlock().getId()).get());
+                res.setRoadBlock(roadBlockRepo.get(res.getRoadBlock().getId()).get());
         });
 
         session.close();
@@ -72,7 +59,7 @@ public class AutomobileRepositoryImpl implements AutomobileRepository {
     }
 
     @Override
-    public void save(Automobile entity) {
+    public void save(Cars entity) {
         Session session = sessionFactory.openSession();
         Transaction transaction = session.beginTransaction();
         session.save(entity);
@@ -81,7 +68,7 @@ public class AutomobileRepositoryImpl implements AutomobileRepository {
     }
 
     @Override
-    public void update(Automobile entity) {
+    public void update(Cars entity) {
         var current = get(entity.getId());
         Session session = sessionFactory.openSession();
         var trans = session.beginTransaction();
@@ -94,12 +81,12 @@ public class AutomobileRepositoryImpl implements AutomobileRepository {
     public void delete(Long id) {
         var session = sessionFactory.openSession();
         var trans = session.beginTransaction();
-        var curr = session.get(Automobile.class, id);
+        var curr = session.get(Cars.class, id);
 
-        curr.getRoadBlock().setAutomobile(null);
+        curr.getRoadBlock().setCars(null);
         trans.commit();
         session.close();
-        roadBlockRepository.update(curr.getRoadBlock());
+        roadBlockRepo.update(curr.getRoadBlock());
 
         session = sessionFactory.openSession();
         trans = session.beginTransaction();
@@ -111,10 +98,10 @@ public class AutomobileRepositoryImpl implements AutomobileRepository {
     }
 
     @Override
-    public void delete(Automobile entity) {
+    public void delete(Cars entity) {
         var session = sessionFactory.openSession();
         var transaction = session.beginTransaction();
-        var curr = session.get(Automobile.class, entity.getId());
+        var curr = session.get(Cars.class, entity.getId());
         session.delete(curr);
         transaction.commit();
         session.close();

@@ -3,8 +3,8 @@ package app.repository.impl;
 import app.domain.DTO.TrafficLightState;
 import app.domain.model.RoadBlock;
 import app.domain.model.TrafficLight;
-import app.repository.RoadBlockRepository;
-import app.repository.TrafficLightRepository;
+import app.repository.RoadBlockRepo;
+import app.repository.TrafficLightRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
@@ -18,15 +18,15 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public class TrafficLightRepositoryImpl implements TrafficLightRepository {
+public class TrafficLightRepoImpl implements TrafficLightRepo {
 
     private final DataSource dataSource;
-    private final RoadBlockRepository roadBlockRepository;
+    private final RoadBlockRepo roadBlockRepo;
 
     @Autowired
-    public TrafficLightRepositoryImpl(DataSource dataSource, RoadBlockRepository roadBlockRepository) {
+    public TrafficLightRepoImpl(DataSource dataSource, RoadBlockRepo roadBlockRepo) {
         this.dataSource = dataSource;
-        this.roadBlockRepository = roadBlockRepository;
+        this.roadBlockRepo = roadBlockRepo;
     }
 
     @Override
@@ -51,7 +51,7 @@ public class TrafficLightRepositoryImpl implements TrafficLightRepository {
             List<RoadBlock> controlledBlocks = new ArrayList<>();
 
             while (result.next()) {
-                var res = roadBlockRepository.get(result.getLong("controlledblocks_id"));
+                var res = roadBlockRepo.get(result.getLong("controlledblocks_id"));
                 res.ifPresent(controlledBlocks::add);
             }
 
@@ -88,7 +88,7 @@ public class TrafficLightRepositoryImpl implements TrafficLightRepository {
                 List<RoadBlock> controlledBlocks = new ArrayList<>();
 
                 while (result.next()) {
-                    var res = roadBlockRepository.get(result.getLong("controlledblocks_id"));
+                    var res = roadBlockRepo.get(result.getLong("controlledblocks_id"));
                     res.ifPresent(controlledBlocks::add);
                 }
 

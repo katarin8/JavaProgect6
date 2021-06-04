@@ -1,8 +1,8 @@
 package app.repository.impl;
 
 import app.domain.model.Line;
-import app.repository.LineRepository;
-import app.repository.RoadBlockRepository;
+import app.repository.LineRepo;
+import app.repository.RoadBlockRepo;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
@@ -14,15 +14,15 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public class LineRepositoryImpl implements LineRepository {
+public class LineRepoImpl implements LineRepo {
 
     private final SessionFactory sessionFactory;
-    private final RoadBlockRepository roadBlockRepository;
+    private final RoadBlockRepo roadBlockRepo;
 
     @Autowired
-    public LineRepositoryImpl(SessionFactory sessionFactory, RoadBlockRepository roadBlockRepository) {
+    public LineRepoImpl(SessionFactory sessionFactory, RoadBlockRepo roadBlockRepo) {
         this.sessionFactory = sessionFactory;
-        this.roadBlockRepository = roadBlockRepository;
+        this.roadBlockRepo = roadBlockRepo;
     }
 
 
@@ -37,7 +37,7 @@ public class LineRepositoryImpl implements LineRepository {
         result.getBlockList().size();
 
         for (int i = 0; i < result.getLineLength(); i++) {
-            result.getBlockList().set(i, roadBlockRepository.get(result.getBlockList().get(i).getId()).get());
+            result.getBlockList().set(i, roadBlockRepo.get(result.getBlockList().get(i).getId()).get());
         }
         session.close();
         return Optional.of(result);
@@ -54,7 +54,7 @@ public class LineRepositoryImpl implements LineRepository {
             line.getBlockList().size();
 
             for (int i = 0; i < line.getLineLength(); i++) {
-                line.getBlockList().set(i, roadBlockRepository.get(line.getBlockList().get(i).getId()).get());
+                line.getBlockList().set(i, roadBlockRepo.get(line.getBlockList().get(i).getId()).get());
             }
         });
 

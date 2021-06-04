@@ -1,7 +1,7 @@
 package app;
 
 import app.config.AppConfig;
-import app.domain.DTO.AutomobileDTO;
+import app.domain.DTO.CarsDTO;
 import app.domain.DTO.TrafficLightDTO;
 import app.domain.DTO.TrafficLightState;
 import app.service.CarGenerationService;
@@ -20,25 +20,8 @@ import java.util.List;
 @ComponentScan(basePackageClasses = {AppConfig.class})
 public class CrossroadApp {
 
-    //static Logger LOG = Logger.getLogger(CrossroadApp.class.getName());
-
-
     public static void main(String[] args) {
         ApplicationContext context = new AnnotationConfigApplicationContext(CrossroadApp.class);
-//        var block = context.getBean(RoadGenerationService.class);
-//
-//        block.initRoad();
-
-//        test.setTrafficLightState(TrafficLightState.RED);
-//        var test = new RoadBlock();
-//        test.setIsCrossroad(true);
-//        block.save(test);
-//        var test1 = new RoadBlock();
-//        test1.setTrafficLightState(TrafficLightState.RED);
-//        test1.setIsCrossroad(true);
-//        block.save(test1);
-
-
         RoadGenerationService roadService = context.getBean(RoadGenerationService.class);
         roadService.initRoad();
         run();
@@ -87,8 +70,8 @@ public class CrossroadApp {
         }
     }
 
-    private static void printCarsToConsole(List<AutomobileDTO> cars) {
-        System.out.println("Automobile list:");
+    private static void printCarsToConsole(List<CarsDTO> cars) {
+        System.out.println("Cars list:");
         cars.forEach(auto -> {
             System.out.println("auto with ID " + auto.getId() + " stands on road block with ID " + auto.getRoadBlock().getId().toString() + "\n");
         });

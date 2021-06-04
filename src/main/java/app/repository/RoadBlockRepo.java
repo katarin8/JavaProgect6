@@ -5,7 +5,7 @@ import app.domain.model.RoadBlock;
 import java.util.List;
 import java.util.Optional;
 
-public interface RoadBlockRepository {
+public interface RoadBlockRepo {
     Optional<RoadBlock> get(Long id);
 
     List<RoadBlock> getAll();

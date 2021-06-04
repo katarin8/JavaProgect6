@@ -1,8 +1,8 @@
 package app.repository.impl;
 
-import app.domain.model.Automobile;
+import app.domain.model.Cars;
 import app.domain.model.RoadBlock;
-import app.repository.RoadBlockRepository;
+import app.repository.RoadBlockRepo;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
@@ -15,11 +15,11 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public class RoadBlockRepositoryImpl implements RoadBlockRepository {
+public class RoadBlockRepoImpl implements RoadBlockRepo {
     private final SessionFactory sessionFactory;
 
     @Autowired
-    public RoadBlockRepositoryImpl(SessionFactory sessionFactory) {
+    public RoadBlockRepoImpl(SessionFactory sessionFactory) {
         this.sessionFactory = sessionFactory;
     }
 
@@ -40,7 +40,7 @@ public class RoadBlockRepositoryImpl implements RoadBlockRepository {
         if (proxyCenter != null)
             proxyCenter.getHibernateLazyInitializer().getImplementation();
 
-        var proxyAutomobile = (HibernateProxy) result.getAutomobile();
+        var proxyAutomobile = (HibernateProxy) result.getCars();
         if (proxyAutomobile != null)
             proxyAutomobile.getHibernateLazyInitializer().getImplementation();
 
@@ -79,7 +79,7 @@ public class RoadBlockRepositoryImpl implements RoadBlockRepository {
     public void delete(Long id) {
         var session = sessionFactory.openSession();
         var transaction = session.beginTransaction();
-        var curr = session.get(Automobile.class, id);
+        var curr = session.get(Cars.class, id);
         session.delete(curr);
         transaction.commit();
         session.close();
@@ -121,23 +121,4 @@ public class RoadBlockRepositoryImpl implements RoadBlockRepository {
 
     }
 
-
-//    public RoadBlockDTO getRoadBlockShiftByIndex(RoadBlockDTO roadBlockDTO, int index){
-//        for (int i = 0; i < index; i++){
-//            roadBlockDTO = roadBlockDTO.getAutomobileLinksList()[1];
-//        }
-//        return roadBlockDTO;
-//        //return roadBlocks.get(roadBlocks.indexOf(roadBlock) + index);
-//    }
-//
-//    @Override
-//    public RoadBlockDTO getRoadBlockLinkByIndex(RoadBlockDTO roadBlockDTO, int index){
-//        return roadBlockDTO.getAutomobileLinksList()[index];
-//        //return roadBlocks.get(roadBlocks.indexOf(roadBlock)).getAutomobileLinksList()[index];
-//    }
-//
-//    @Override
-//    public void setRoadBlockLinkByIndex(RoadBlockDTO roadBlockDTOFrom, RoadBlockDTO roadBlockDTOTo, int index){
-//        roadBlockDTOFrom.getAutomobileLinksList()[index] = roadBlockDTOTo;
-//    }
 }

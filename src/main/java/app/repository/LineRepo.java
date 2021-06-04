@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public interface LineRepository {
+public interface LineRepo {
     Optional<Line> get(Long id);
 
     List<Line> getAll();

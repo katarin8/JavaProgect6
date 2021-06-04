@@ -5,7 +5,7 @@ import app.domain.model.TrafficLight;
 import java.util.List;
 import java.util.Optional;
 
-public interface TrafficLightRepository {
+public interface TrafficLightRepo {
     Optional<TrafficLight> get(Long id);
 
     List<TrafficLight> getAll();

@@ -1,11 +1,11 @@
 package app.service;
 
-import app.domain.DTO.AutomobileDTO;
+import app.domain.DTO.CarsDTO;
 import app.domain.DTO.RoadBlockDTO;
 import app.domain.DTO.TrafficLightState;
 import app.mapper.MainMapper;
-import app.repository.AutomobileRepository;
-import app.repository.RoadBlockRepository;
+import app.repository.CarsRepo;
+import app.repository.RoadBlockRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -15,16 +15,16 @@ import java.util.List;
 @Service
 public class CarMovingService {
 
-    private final RoadBlockRepository roadBlockRepository;
-    private final AutomobileRepository automobileRepository;
+    private final RoadBlockRepo roadBlockRepo;
+    private final CarsRepo carsRepo;
 
     private final MainMapper mapper;
 
     @Autowired
-    public CarMovingService(MainMapper mapper, RoadBlockRepository roadBlockRepository, AutomobileRepository automobileRepository) {
+    public CarMovingService(MainMapper mapper, RoadBlockRepo roadBlockRepo, CarsRepo carsRepo) {
         this.mapper = mapper;
-        this.roadBlockRepository = roadBlockRepository;
-        this.automobileRepository = automobileRepository;
+        this.roadBlockRepo = roadBlockRepo;
+        this.carsRepo = carsRepo;
     }
 
     public void moveAllCars() {
@@ -60,14 +60,14 @@ public class CarMovingService {
             //}
         });
 
-        carsToRemove.forEach(automobileRepository::delete);
+        carsToRemove.forEach(carsRepo::delete);
     }
 
-    public List<AutomobileDTO> getAllAutomobiles() {
-        return mapper.autoToAutoDTO(automobileRepository.getAll());
+    public List<CarsDTO> getAllAutomobiles() {
+        return mapper.autoToAutoDTO(carsRepo.getAll());
     }
 
-    private void moveCar(RoadBlockDTO currBlock, RoadBlockDTO nextBlock, AutomobileDTO auto) {
+    private void moveCar(RoadBlockDTO currBlock, RoadBlockDTO nextBlock, CarsDTO auto) {
 
         if (nextBlock == null) {
             currBlock.setAutomobile(null);
@@ -88,8 +88,8 @@ public class CarMovingService {
         var currBlockEnt = mapper.blockDtoToBlockNoReccurency(currBlock);
         var nextBlockEnt = mapper.blockDtoToBlockNoReccurency(nextBlock);
         var autoEnt = mapper.autoDtoToAuto(auto);
-        roadBlockRepository.updateSavingNextBlocks(currBlockEnt);
-        roadBlockRepository.updateSavingNextBlocks(nextBlockEnt);
-        automobileRepository.update(autoEnt);
+        roadBlockRepo.updateSavingNextBlocks(currBlockEnt);
+        roadBlockRepo.updateSavingNextBlocks(nextBlockEnt);
+        carsRepo.update(autoEnt);
     }
 }

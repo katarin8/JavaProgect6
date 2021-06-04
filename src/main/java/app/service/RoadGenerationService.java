@@ -6,9 +6,9 @@ import app.domain.DTO.RoadBlockDTO;
 import app.domain.DTO.TrafficLightDTO;
 import app.domain.DTO.TrafficLightState;
 import app.mapper.MainMapper;
-import app.repository.LineRepository;
-import app.repository.RoadBlockRepository;
-import app.repository.TrafficLightRepository;
+import app.repository.LineRepo;
+import app.repository.RoadBlockRepo;
+import app.repository.TrafficLightRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -19,21 +19,21 @@ import java.util.List;
 public class RoadGenerationService {
     private final RoadComponent roadComponent;
 
-    private final LineRepository lineRepository;
-    private final RoadBlockRepository roadBlockRepository;
-    private final TrafficLightRepository trafficLightRepository;
+    private final LineRepo lineRepo;
+    private final RoadBlockRepo roadBlockRepo;
+    private final TrafficLightRepo trafficLightRepo;
 
     private final MainMapper mapper;
 
     @Autowired
-    public RoadGenerationService(LineRepository lineRepository,
+    public RoadGenerationService(LineRepo lineRepo,
                                  RoadComponent roadComponent,
-                                 RoadBlockRepository roadBlockRepository,
-                                 TrafficLightRepository trafficLightRepository, MainMapper mapper) {
-        this.lineRepository = lineRepository;
+                                 RoadBlockRepo roadBlockRepo,
+                                 TrafficLightRepo trafficLightRepo, MainMapper mapper) {
+        this.lineRepo = lineRepo;
         this.roadComponent = roadComponent;
-        this.roadBlockRepository = roadBlockRepository;
-        this.trafficLightRepository = trafficLightRepository;
+        this.roadBlockRepo = roadBlockRepo;
+        this.trafficLightRepo = trafficLightRepo;
         this.mapper = mapper;
     }
 
@@ -44,7 +44,7 @@ public class RoadGenerationService {
     }
 
     public boolean isRoadInitiated() {
-        return roadBlockRepository.getAll().size() == roadComponent.getLineLength() * roadComponent.getLinesPerSide() * 4;
+        return roadBlockRepo.getAll().size() == roadComponent.getLineLength() * roadComponent.getLinesPerSide() * 4;
     }
 
     private void generateRoad() {
@@ -58,13 +58,13 @@ public class RoadGenerationService {
                 initLine(roadComponent.getLineLength());
 
                 if (j > 0) {
-                    var firstLine = lineRepository.get((long) (index * roadComponent.getLinesPerSide() + j)).get();
+                    var firstLine = lineRepo.get((long) (index * roadComponent.getLinesPerSide() + j)).get();
                     if (!lines.stream().anyMatch(dto -> dto.getId() == firstLine.getId()))
                         lines.add(mapper.lineToLineDTO(firstLine));
 
                     var aaa = mapper.lineToLineDTO(firstLine);
 
-                    var secLine = lineRepository.get((long) (index * roadComponent.getLinesPerSide() + j + 1)).get(); // FIXED COUNTER
+                    var secLine = lineRepo.get((long) (index * roadComponent.getLinesPerSide() + j + 1)).get(); // FIXED COUNTER
                     if (!lines.stream().anyMatch(dto -> dto.getId() == secLine.getId()))
                         lines.add(mapper.lineToLineDTO(secLine));
 
@@ -101,8 +101,8 @@ public class RoadGenerationService {
             leftTurn.setIsCrossRoad(true);
             rightTurn.setIsCrossRoad(true);
 
-            roadBlockRepository.update(mapper.blockDtoToBlockNoReccurency(leftTurn));
-            roadBlockRepository.update(mapper.blockDtoToBlockNoReccurency(rightTurn));
+            roadBlockRepo.update(mapper.blockDtoToBlockNoReccurency(leftTurn));
+            roadBlockRepo.update(mapper.blockDtoToBlockNoReccurency(rightTurn));
         }
     }
 
@@ -112,7 +112,7 @@ public class RoadGenerationService {
         startBlock.setTrafficLightState(TrafficLightState.GREEN);
         RoadBlockDTO curr = startBlock;
 
-        //roadBlockRepository.save(startBlock);
+        //roadBlockRepo.save(startBlock);
 
         for (int i = 0; i < lineLength - 1; i++) {
             RoadBlockDTO next = new RoadBlockDTO();
@@ -121,7 +121,7 @@ public class RoadGenerationService {
             curr = next;
         }
 
-        lineRepository.save(mapper.lineDtoToLine(new LineDTO(startBlock, lineLength)));
+        lineRepo.save(mapper.lineDtoToLine(new LineDTO(startBlock, lineLength)));
     }
 
     private void linkRoadBlocksByIndex(RoadBlockDTO from, RoadBlockDTO to, int index) {
@@ -129,7 +129,7 @@ public class RoadGenerationService {
             return;
 
         from.getAutomobileLinksList()[index] = to;
-        roadBlockRepository.update(mapper.blockDtoToBlock(from));
+        roadBlockRepo.update(mapper.blockDtoToBlock(from));
     }
 
     private RoadBlockDTO getRoadBlockShiftByIndex(RoadBlockDTO stratBlock, int index) {
@@ -150,7 +150,7 @@ public class RoadGenerationService {
 
             for (int j = 0; j < roadComponent.getLinesPerSide(); j++) {
                 RoadBlockDTO block = getRoadBlockShiftByIndex(
-                        mapper.lineToLineDTO(lineRepository.get((long) (index * roadComponent.getLinesPerSide() + j + 1)).get()).getStartBlock(), //fixed
+                        mapper.lineToLineDTO(lineRepo.get((long) (index * roadComponent.getLinesPerSide() + j + 1)).get()).getStartBlock(), //fixed
                         (LINE_LENGTH / 2 - LINES_PER_SIDE - 2 - TRAFFIC_LIGHT_DIST));
 
                 roadBlockDTOS.add(block);
@@ -163,11 +163,11 @@ public class RoadGenerationService {
 
             roadBlockDTOS.forEach(roadBlock -> {
                 roadBlock.setTrafficLightState(TrafficLightState.RED);
-                roadBlockRepository.update(mapper.blockDtoToBlockNoReccurency(roadBlock));
+                roadBlockRepo.update(mapper.blockDtoToBlockNoReccurency(roadBlock));
             });
 
             var res = mapper.trafficLightDtoTotrafficLight(new TrafficLightDTO(roadBlockDTOS, TrafficLightState.RED));
-            trafficLightRepository.save(res);
+            trafficLightRepo.save(res);
             var c = 0;
         }
     }
