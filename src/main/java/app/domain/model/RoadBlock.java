@@ -31,7 +31,7 @@ public class RoadBlock {
 
     @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
     @Nullable
-    private Cars cars;
+    private Automobile automobile;
 
     @Column(name = "trafficLightState", nullable = false)
     @Enumerated(EnumType.ORDINAL)
@@ -46,7 +46,7 @@ public class RoadBlock {
                 ", leftBlockId=" + (leftBlock == null ? "none" : leftBlock.getId()) +
                 ", centerBlockId=" + (centerBlock == null ? "none" : centerBlock.getId()) +
                 ", rightBlockId=" + (rightBlock == null ? "none" : rightBlock.getId()) +
-                ", automobileId=" + (cars == null ? "none" : cars.getId()) +
+                ", automobileId=" + (automobile == null ? "none" : automobile.getId()) +
                 ", trafficLightState=" + trafficLightState +
                 ", isCrossroad=" + isCrossroad +
                 '}';

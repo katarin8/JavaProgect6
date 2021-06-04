@@ -1,6 +1,6 @@
 package app.service;
 
-import app.component.CrossRoads;
+import app.component.RoadComponent;
 import app.domain.DTO.TrafficLightDTO;
 import app.domain.DTO.TrafficLightState;
 import app.mapper.MainMapper;
@@ -13,18 +13,18 @@ import java.util.List;
 
 @Service
 public class TrafficLightService {
-    private final CrossRoads crossRoads;
+    private final RoadComponent roadComponent;
     private final TrafficLightRepository trafficLightRepository;
     private final RoadBlockRepository roadBlockRepository;
     private final MainMapper mapper;
 
     @Autowired
     public TrafficLightService(MainMapper mapper, TrafficLightRepository trafficLightRepository,
-                               CrossRoads crossRoads,
+                               RoadComponent roadComponent,
                                RoadBlockRepository roadBlockRepository) {
         this.mapper = mapper;
         this.trafficLightRepository = trafficLightRepository;
-        this.crossRoads = crossRoads;
+        this.roadComponent = roadComponent;
         this.roadBlockRepository = roadBlockRepository;
     }
 
@@ -36,7 +36,7 @@ public class TrafficLightService {
 
     public void startAll() {
         for (TrafficLightDTO trafficLightDTO : mapper.trafficLightTotrafficLightDTO(trafficLightRepository.getAll())) {
-            trafficLightDTO.setLastSwitchTime(crossRoads.getCurrentTimeInSeconds());
+            trafficLightDTO.setLastSwitchTime(roadComponent.getCurrentTimeInSeconds());
 
             trafficLightRepository.update(mapper.trafficLightDtoTotrafficLight(trafficLightDTO));
         }
@@ -70,7 +70,7 @@ public class TrafficLightService {
 
     public void changeStateByTime() {
         getTrafficLightList().forEach(trafficLight -> {
-            long time = crossRoads.getCurrentTimeInSeconds();
+            long time = roadComponent.getCurrentTimeInSeconds();
 
             switch (trafficLight.getCurrentState()) {
                 case RED: {
@@ -98,7 +98,7 @@ public class TrafficLightService {
                 TrafficLightState.values()[(trafficLightDTO.getCurrentState().ordinal() + 1) % TrafficLightState.values().length]
         );
 
-        trafficLightDTO.setLastSwitchTime(crossRoads.getCurrentTimeInSeconds());
+        trafficLightDTO.setLastSwitchTime(roadComponent.getCurrentTimeInSeconds());
 
         trafficLightDTO.getControlledBlocks()
                 .forEach(roadBlock -> {

@@ -1,6 +1,6 @@
 package app.repository.impl;
 
-import app.domain.model.Cars;
+import app.domain.model.Automobile;
 import app.repository.AutomobileRepository;
 import app.repository.RoadBlockRepository;
 import org.hibernate.Session;
@@ -28,9 +28,9 @@ public class AutomobileRepositoryImpl implements AutomobileRepository {
     }
 
     @Override
-    public Optional<Cars> get(Long id) {
+    public Optional<Automobile> get(Long id) {
         Session session = sessionFactory.openSession();
-        var result = session.get(Cars.class, id);
+        var result = session.get(Automobile.class, id);
 
         if (result.getRoadBlock() instanceof HibernateProxy) {
             var proxy = (HibernateProxy) result.getRoadBlock();
@@ -44,10 +44,10 @@ public class AutomobileRepositoryImpl implements AutomobileRepository {
     }
 
     @Override
-    public List<Cars> getAll() {
+    public List<Automobile> getAll() {
         Session session = sessionFactory.openSession();
-        var query = session.createQuery("from automobiles", Cars.class);
-        List<Cars> result = query.getResultList();
+        var query = session.createQuery("from automobiles", Automobile.class);
+        List<Automobile> result = query.getResultList();
 
         result.forEach(res -> {
 //            if (res.getRoadBlock() instanceof HibernateProxy) {
@@ -72,7 +72,7 @@ public class AutomobileRepositoryImpl implements AutomobileRepository {
     }
 
     @Override
-    public void save(Cars entity) {
+    public void save(Automobile entity) {
         Session session = sessionFactory.openSession();
         Transaction transaction = session.beginTransaction();
         session.save(entity);
@@ -81,7 +81,7 @@ public class AutomobileRepositoryImpl implements AutomobileRepository {
     }
 
     @Override
-    public void update(Cars entity) {
+    public void update(Automobile entity) {
         var current = get(entity.getId());
         Session session = sessionFactory.openSession();
         var trans = session.beginTransaction();
@@ -94,9 +94,9 @@ public class AutomobileRepositoryImpl implements AutomobileRepository {
     public void delete(Long id) {
         var session = sessionFactory.openSession();
         var trans = session.beginTransaction();
-        var curr = session.get(Cars.class, id);
+        var curr = session.get(Automobile.class, id);
 
-        curr.getRoadBlock().setCars(null);
+        curr.getRoadBlock().setAutomobile(null);
         trans.commit();
         session.close();
         roadBlockRepository.update(curr.getRoadBlock());
@@ -111,10 +111,10 @@ public class AutomobileRepositoryImpl implements AutomobileRepository {
     }
 
     @Override
-    public void delete(Cars entity) {
+    public void delete(Automobile entity) {
         var session = sessionFactory.openSession();
         var transaction = session.beginTransaction();
-        var curr = session.get(Cars.class, entity.getId());
+        var curr = session.get(Automobile.class, entity.getId());
         session.delete(curr);
         transaction.commit();
         session.close();
@@ -124,7 +124,7 @@ public class AutomobileRepositoryImpl implements AutomobileRepository {
     public void clear() {
         try (var session = sessionFactory.openSession()) {
             Transaction transaction = session.beginTransaction();
-            session.createQuery("delete from cars ").executeUpdate();
+            session.createQuery("delete from automobiles ").executeUpdate();
             transaction.commit();
         } catch (Exception ignored) {
         }

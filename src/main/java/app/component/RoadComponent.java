@@ -6,7 +6,7 @@ import org.springframework.stereotype.Component;
 import java.time.Instant;
 
 @Component
-public class CrossRoads {
+public class RoadComponent {
 
     private static final int LINES_PER_SIDE = 2;
     private static final int LINE_LENGTH = 100;
@@ -17,7 +17,7 @@ public class CrossRoads {
     private static final int MAX_AUTO_SPEED = 3;
 
     @Autowired
-    public CrossRoads() {
+    public RoadComponent() {
     }
 
     public int getLinesPerSide() {

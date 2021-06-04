@@ -1,10 +1,10 @@
 package app.mapper;
 
-import app.domain.DTO.CarsDTO;
+import app.domain.DTO.AutomobileDTO;
 import app.domain.DTO.LineDTO;
 import app.domain.DTO.RoadBlockDTO;
 import app.domain.DTO.TrafficLightDTO;
-import app.domain.model.Cars;
+import app.domain.model.Automobile;
 import app.domain.model.Line;
 import app.domain.model.RoadBlock;
 import app.domain.model.TrafficLight;
@@ -17,22 +17,22 @@ import java.util.Stack;
 
 @Mapper(componentModel = "spring")
 public abstract class MainMapper {
-    public Cars autoDtoToAuto(CarsDTO dto) {
-        Cars cars = new Cars();
-        cars.setDriveModel(dto.getDriveModel());
-        cars.setHasTurned(dto.getHasTurned());
-        cars.setSpeed(dto.getSpeed());
-        cars.setId(dto.getId());
+    public Automobile autoDtoToAuto(AutomobileDTO dto) {
+        Automobile automobile = new Automobile();
+        automobile.setDriveModel(dto.getDriveModel());
+        automobile.setHasTurned(dto.getHasTurned());
+        automobile.setSpeed(dto.getSpeed());
+        automobile.setId(dto.getId());
 
         if (dto.getRoadBlock() != null) {
-            cars.setRoadBlock(blockDtoToBlockNoReccurency(dto.getRoadBlock()));
+            automobile.setRoadBlock(blockDtoToBlockNoReccurency(dto.getRoadBlock()));
         }
 
-        return cars;
+        return automobile;
     }
 
-    public CarsDTO autoToAutoDTO(Cars ent) {
-        CarsDTO dto = new CarsDTO();
+    public AutomobileDTO autoToAutoDTO(Automobile ent) {
+        AutomobileDTO dto = new AutomobileDTO();
         dto.setId(ent.getId());
         dto.setDriveModel(ent.getDriveModel());
         dto.setSpeed(ent.getSpeed());
@@ -46,8 +46,8 @@ public abstract class MainMapper {
         return dto;
     }
 
-    private CarsDTO autoToAutoDTOLazy(Cars ent) {
-        CarsDTO dto = new CarsDTO();
+    private AutomobileDTO autoToAutoDTOLazy(Automobile ent) {
+        AutomobileDTO dto = new AutomobileDTO();
         dto.setId(ent.getId());
         dto.setDriveModel(ent.getDriveModel());
         dto.setSpeed(ent.getSpeed());
@@ -56,16 +56,16 @@ public abstract class MainMapper {
         return dto;
     }
 
-    public List<Cars> autoDtoToAuto(List<CarsDTO> dto) {
-        List<Cars> res = new ArrayList<>();
+    public List<Automobile> autoDtoToAuto(List<AutomobileDTO> dto) {
+        List<Automobile> res = new ArrayList<>();
         for (var item : dto)
             res.add(autoDtoToAuto(item));
 
         return res;
     }
 
-    public List<CarsDTO> autoToAutoDTO(List<Cars> ent) {
-        List<CarsDTO> res = new ArrayList<>();
+    public List<AutomobileDTO> autoToAutoDTO(List<Automobile> ent) {
+        List<AutomobileDTO> res = new ArrayList<>();
         for (var item : ent)
             res.add(autoToAutoDTO(item));
 
@@ -91,13 +91,13 @@ public abstract class MainMapper {
         }
 
         if (dto.getAutomobile() != null) {
-            Cars auto = new Cars();
+            Automobile auto = new Automobile();
             auto.setSpeed(dto.getAutomobile().getSpeed());
             auto.setRoadBlock(roadBlock);
             auto.setHasTurned(dto.getAutomobile().getHasTurned());
             auto.setDriveModel(dto.getAutomobile().getDriveModel());
             auto.setId(dto.getAutomobile().getId());
-            roadBlock.setCars(auto);
+            roadBlock.setAutomobile(auto);
         }
 
         return roadBlock;
@@ -121,13 +121,13 @@ public abstract class MainMapper {
         }
 
         if (dto.getAutomobile() != null) {
-            Cars auto = new Cars();
+            Automobile auto = new Automobile();
             auto.setSpeed(dto.getAutomobile().getSpeed());
             auto.setRoadBlock(roadBlock);
             auto.setHasTurned(dto.getAutomobile().getHasTurned());
             auto.setDriveModel(dto.getAutomobile().getDriveModel());
             auto.setId(dto.getAutomobile().getId());
-            roadBlock.setCars(auto);
+            roadBlock.setAutomobile(auto);
         }
 
         return roadBlock;
@@ -179,9 +179,9 @@ public abstract class MainMapper {
             dto.getAutomobileLinksList()[2] = blockToBlockDTO(ent.getRightBlock());
         }
 
-        if (ent.getCars() != null) {
-            CarsDTO carsDTO = autoToAutoDTOLazy(ent.getCars());
-            carsDTO.setRoadBlock(dto);
+        if (ent.getAutomobile() != null) {
+            AutomobileDTO automobileDTO = autoToAutoDTOLazy(ent.getAutomobile());
+            automobileDTO.setRoadBlock(dto);
         }
 
         return dto;
@@ -222,8 +222,8 @@ public abstract class MainMapper {
             dto.getAutomobileLinksList()[2] = getRoadBlockDTOFromFields(ent.getRightBlock());
         }
 
-        if (ent.getCars() != null) {
-            dto.setAutomobile(autoToAutoDTOLazy(ent.getCars()));
+        if (ent.getAutomobile() != null) {
+            dto.setAutomobile(autoToAutoDTOLazy(ent.getAutomobile()));
             dto.getAutomobile().setRoadBlock(dto);
         }
 
@@ -288,6 +288,20 @@ public abstract class MainMapper {
         lineDto.setStartBlock(lastBlock);
         return lineDto;
     }
+//
+//    private RoadBlockDTO readAllDescendants(RoadBlock block){
+//        if (block.getLeftBlock() != null)
+//            readAllDescendants(block.getLeftBlock());
+//
+//        if (block.getCenterBlock() != null)
+//            readAllDescendants(block.getCenterBlock());
+//
+//        if (block.getRightBlock() != null)
+//            readAllDescendants(block.getRightBlock());
+//
+//        return blockToBlockDTO(block);
+//    }
+
 
     public TrafficLight trafficLightDtoTotrafficLight(TrafficLightDTO dto) {
         TrafficLight trafficLight = new TrafficLight();

@@ -1,6 +1,6 @@
 package app.repository.impl;
 
-import app.domain.model.Cars;
+import app.domain.model.Automobile;
 import app.domain.model.RoadBlock;
 import app.repository.RoadBlockRepository;
 import org.hibernate.Session;
@@ -40,7 +40,7 @@ public class RoadBlockRepositoryImpl implements RoadBlockRepository {
         if (proxyCenter != null)
             proxyCenter.getHibernateLazyInitializer().getImplementation();
 
-        var proxyAutomobile = (HibernateProxy) result.getCars();
+        var proxyAutomobile = (HibernateProxy) result.getAutomobile();
         if (proxyAutomobile != null)
             proxyAutomobile.getHibernateLazyInitializer().getImplementation();
 
@@ -79,7 +79,7 @@ public class RoadBlockRepositoryImpl implements RoadBlockRepository {
     public void delete(Long id) {
         var session = sessionFactory.openSession();
         var transaction = session.beginTransaction();
-        var curr = session.get(Cars.class, id);
+        var curr = session.get(Automobile.class, id);
         session.delete(curr);
         transaction.commit();
         session.close();

@@ -1,7 +1,7 @@
 package app.repository.impl;
 
 
-import app.domain.model.Cars;
+import app.domain.model.Automobile;
 import app.domain.model.TrafficLight;
 import app.repository.RoadBlockRepository;
 import app.repository.TrafficLightRepository;
@@ -22,6 +22,7 @@ public class TrafficLightRepositoryImpl2 implements TrafficLightRepository {
         this.sessionFactory = sessionFactory;
         this.roadBlockRepository = roadBlockRepository;
     }
+
 
 
     @Override
@@ -82,7 +83,7 @@ public class TrafficLightRepositoryImpl2 implements TrafficLightRepository {
     public void delete(Long id) {
         var session = sessionFactory.openSession();
         var trans = session.beginTransaction();
-        var curr = session.get(Cars.class, id);
+        var curr = session.get(Automobile.class, id);
         session.delete(curr);
         trans.commit();
         session.close();

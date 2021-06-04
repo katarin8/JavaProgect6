@@ -1,6 +1,6 @@
 package app.service;
 
-import app.domain.DTO.CarsDTO;
+import app.domain.DTO.AutomobileDTO;
 import app.domain.DTO.RoadBlockDTO;
 import app.domain.DTO.TrafficLightState;
 import app.mapper.MainMapper;
@@ -63,11 +63,11 @@ public class CarMovingService {
         carsToRemove.forEach(automobileRepository::delete);
     }
 
-    public List<CarsDTO> getAllAutomobiles() {
+    public List<AutomobileDTO> getAllAutomobiles() {
         return mapper.autoToAutoDTO(automobileRepository.getAll());
     }
 
-    private void moveCar(RoadBlockDTO currBlock, RoadBlockDTO nextBlock, CarsDTO auto) {
+    private void moveCar(RoadBlockDTO currBlock, RoadBlockDTO nextBlock, AutomobileDTO auto) {
 
         if (nextBlock == null) {
             currBlock.setAutomobile(null);

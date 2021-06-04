@@ -8,9 +8,9 @@ import org.springframework.lang.Nullable;
 import javax.persistence.*;
 
 @Data
-@Entity(name = "cars")
+@Entity(name = "automobiles")
 @NoArgsConstructor
-public class Cars {
+public class Automobile {
     @Id
     @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.AUTO)

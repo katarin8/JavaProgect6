@@ -1,7 +1,7 @@
 package app;
 
 import app.config.AppConfig;
-import app.domain.DTO.CarsDTO;
+import app.domain.DTO.AutomobileDTO;
 import app.domain.DTO.TrafficLightDTO;
 import app.domain.DTO.TrafficLightState;
 import app.service.CarGenerationService;
@@ -87,7 +87,7 @@ public class CrossroadApp {
         }
     }
 
-    private static void printCarsToConsole(List<CarsDTO> cars) {
+    private static void printCarsToConsole(List<AutomobileDTO> cars) {
         System.out.println("Automobile list:");
         cars.forEach(auto -> {
             System.out.println("auto with ID " + auto.getId() + " stands on road block with ID " + auto.getRoadBlock().getId().toString() + "\n");

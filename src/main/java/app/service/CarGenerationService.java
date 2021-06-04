@@ -1,7 +1,7 @@
 package app.service;
 
-import app.component.CrossRoads;
-import app.domain.DTO.CarsDTO;
+import app.component.RoadComponent;
+import app.domain.DTO.AutomobileDTO;
 import app.domain.DTO.DriveModel;
 import app.domain.DTO.LineDTO;
 import app.domain.DTO.RoadBlockDTO;
@@ -18,7 +18,7 @@ import java.util.Random;
 public class CarGenerationService {
     private final LineRepository lineRepository;
     private final AutomobileRepository automobileRepository;
-    private final CrossRoads crossRoads;
+    private final RoadComponent roadComponent;
     private final RoadBlockRepository roadBlockRepository;
 
     private final MainMapper mapper;
@@ -27,42 +27,42 @@ public class CarGenerationService {
     public CarGenerationService(MainMapper mapper, LineRepository lineRepository,
                                 RoadBlockRepository roadBlockRepository,
                                 AutomobileRepository automobileRepository,
-                                CrossRoads crossRoads) {
+                                RoadComponent roadComponent) {
         this.mapper = mapper;
         this.lineRepository = lineRepository;
         this.roadBlockRepository = roadBlockRepository;
         this.automobileRepository = automobileRepository;
-        this.crossRoads = crossRoads;
+        this.roadComponent = roadComponent;
     }
 
     public void generateCars(int count) {
         Random random = new Random();
 
 
-        for (int i = 0; i < count && i < crossRoads.getLinesPerSide() * 4; i++) {
+        for (int i = 0; i < count && i < roadComponent.getLinesPerSide() * 4; i++) {
             LineDTO ln;
 
             do {
-                int lineNum = random.nextInt(crossRoads.getLinesPerSide() * 4);
+                int lineNum = random.nextInt(roadComponent.getLinesPerSide() * 4);
                 ln = mapper.lineToLineDTO(lineRepository.get(lineNum + 1L).get()); //fixed
             }
             while (ln == null || (ln != null && ln.getStartBlock().getAutomobile() != null));
 
             RoadBlockDTO startBlock = ln.getStartBlock();
-            int autoSpeed = random.nextInt(crossRoads.getMaxAutoSpeed() - crossRoads.getMinAutoSpeed());
+            int autoSpeed = random.nextInt(roadComponent.getMaxAutoSpeed() - roadComponent.getMinAutoSpeed());
 
-            CarsDTO carsDTO = new CarsDTO(autoSpeed + crossRoads.getMinAutoSpeed(),
+            AutomobileDTO automobileDTO = new AutomobileDTO(autoSpeed + roadComponent.getMinAutoSpeed(),
                     DriveModel.values()[random.nextInt(DriveModel.values().length)],
                     startBlock);
-            startBlock.setAutomobile(carsDTO);
-            carsDTO.setRoadBlock(startBlock);
+            startBlock.setAutomobile(automobileDTO);
+            automobileDTO.setRoadBlock(startBlock);
 
-            var auto = mapper.autoDtoToAuto(carsDTO);
+            var auto = mapper.autoDtoToAuto(automobileDTO);
             automobileRepository.save(auto);
-            carsDTO.setId(auto.getId());
-            startBlock.setAutomobile(carsDTO);
+            automobileDTO.setId(auto.getId());
+            startBlock.setAutomobile(automobileDTO);
 
-            auto = mapper.autoDtoToAuto(carsDTO);
+            auto = mapper.autoDtoToAuto(automobileDTO);
             automobileRepository.update(auto);
             roadBlockRepository.update(auto.getRoadBlock());
         }
