@@ -38,27 +38,27 @@ public class CrossroadApp {
         if (!roadService.isRoadInitiated())
             roadService.initRoad();
 
-        System.out.println("Road Generated");
+        System.out.println("Дорога сгенерирована");
 
         trafficLightService.startAll();
         trafficLightService.changeCycleTimeByColor(TrafficLightState.RED, 5);
         trafficLightService.changeCycleTimeByColor(TrafficLightState.YELLOW, 1);
         trafficLightService.changeCycleTimeByColor(TrafficLightState.GREEN, 10);
-        System.out.println("Traffic Lights are initiated");
+        System.out.println("Светофоры инициализированны");
 
         carGenerationService.generateCars(8);
 
         while (carMovingService.getAllAutomobiles().size() != 0) {
             trafficLightService.changeStateByTime();
-            System.out.println("Traffic lights state was checked\n");
+            System.out.println("Состояние светофора проверено\n");
             printAllTrafficLights(trafficLightService.getTrafficLightList());
 
-            System.out.println("Before moving: ");
+            System.out.println("Перед движением: ");
             printCarsToConsole(carMovingService.getAllAutomobiles());
 
             carMovingService.moveAllCars();
 
-            System.out.println("After moving: ");
+            System.out.println("После движения: ");
             printCarsToConsole(carMovingService.getAllAutomobiles());
 
 
@@ -71,17 +71,17 @@ public class CrossroadApp {
     }
 
     private static void printCarsToConsole(List<CarsDTO> cars) {
-        System.out.println("Cars list:");
+        System.out.println("Список машин:");
         cars.forEach(auto -> {
-            System.out.println("auto with ID " + auto.getId() + " stands on road block with ID " + auto.getRoadBlock().getId().toString() + "\n");
+            System.out.println("Машина с ID " + auto.getId() + " стоит на дорожном блоке с ID " + auto.getRoadBlock().getId().toString() + "\n");
         });
     }
 
     private static void printAllTrafficLights(List<TrafficLightDTO> trafficLightDTOS) {
-        System.out.println("Traffic light list: ");
+        System.out.println("Список светофоров: ");
         trafficLightDTOS.forEach(trafficLight -> {
-            System.out.println("trafficLight with ID " + trafficLight.getId().toString()
-                    + " has state " + trafficLight.getCurrentState().toString() + "\n");
+            System.out.println("Светофор с ID " + trafficLight.getId().toString()
+                    + " имеет состояние " + trafficLight.getCurrentState().toString() + "\n");
         });
     }
 
