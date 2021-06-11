@@ -1,11 +1,11 @@
 package app.mapper.impl;
 
 import app.domain.DTO.CarsDTO;
-import app.domain.DTO.LineDTO;
+import app.domain.DTO.RoadDTO;
 import app.domain.DTO.RoadBlockDTO;
 import app.domain.DTO.TrafficLightDTO;
 import app.domain.model.Cars;
-import app.domain.model.Line;
+import app.domain.model.Road;
 import app.domain.model.RoadBlock;
 import app.domain.model.TrafficLight;
 
@@ -18,7 +18,7 @@ public class MainMapperImpl {
 
     public Cars autoDtoToAuto(CarsDTO dto) {
         Cars cars = new Cars();
-        cars.setDriveModel(dto.getDriveModel());
+        cars.setDriveLine(dto.getDriveLine());
         cars.setHasTurned(dto.getHasTurned());
         cars.setSpeed(dto.getSpeed());
         cars.setId(dto.getId());
@@ -34,7 +34,7 @@ public class MainMapperImpl {
     public CarsDTO autoToAutoDTO(Cars ent) {
         CarsDTO dto = new CarsDTO();
         dto.setId(ent.getId());
-        dto.setDriveModel(ent.getDriveModel());
+        dto.setDriveLine(ent.getDriveLine());
         dto.setSpeed(ent.getSpeed());
         dto.setHasTurned(ent.getHasTurned());
 
@@ -81,7 +81,7 @@ public class MainMapperImpl {
             auto.setSpeed(dto.getAutomobile().getSpeed());
             auto.setRoadBlock(roadBlock);
             auto.setHasTurned(dto.getAutomobile().getHasTurned());
-            auto.setDriveModel(dto.getAutomobile().getDriveModel());
+            auto.setDriveLine(dto.getAutomobile().getDriveLine());
             auto.setId(dto.getAutomobile().getId());
             roadBlock.setCars(auto);
         }
@@ -107,7 +107,7 @@ public class MainMapperImpl {
             carsDTO.setId(ent.getCars().getId());
             carsDTO.setSpeed(ent.getCars().getSpeed());
             carsDTO.setHasTurned(ent.getCars().getHasTurned());
-            carsDTO.setDriveModel(ent.getCars().getDriveModel());
+            carsDTO.setDriveLine(ent.getCars().getDriveLine());
             carsDTO.setRoadBlock(dto);
         }
 
@@ -115,23 +115,23 @@ public class MainMapperImpl {
     }
 
 
-    public Line lineDtoToLine(LineDTO dto) {
-        Line line = new Line();
-        line.setLineLength(dto.getLineLength());
-        line.setId(dto.getId());
-        //line.setStartBlock(blockDtoToBlock(dto.getStartBlock()));
+    public Road lineDtoToLine(RoadDTO dto) {
+        Road road = new Road();
+        road.setLineLength(dto.getLineLength());
+        road.setId(dto.getId());
+        //road.setStartBlock(blockDtoToBlock(dto.getStartBlock()));
 
-        return line;
+        return road;
     }
 
 
-    public LineDTO lineToLineDTO(Line ent) {
-        LineDTO lineDto = new LineDTO();
-        lineDto.setLineLength(ent.getLineLength());
-        lineDto.setId(ent.getId());
-        //lineDto.setStartBlock(readAllDescendants(ent.getStartBlock()));
+    public RoadDTO lineToLineDTO(Road ent) {
+        RoadDTO roadDto = new RoadDTO();
+        roadDto.setLineLength(ent.getLineLength());
+        roadDto.setId(ent.getId());
+        //roadDto.setStartBlock(readAllDescendants(ent.getStartBlock()));
 
-        return lineDto;
+        return roadDto;
     }
 
     private RoadBlockDTO readAllDescendants(RoadBlock block) {
@@ -196,8 +196,8 @@ public class MainMapperImpl {
     }
 
 
-    public List<Line> lineDtoToLine(List<LineDTO> dto) {
-        List<Line> res = new ArrayList<>();
+    public List<Road> lineDtoToLine(List<RoadDTO> dto) {
+        List<Road> res = new ArrayList<>();
 
         for (var item : dto)
             res.add(lineDtoToLine(item));
@@ -206,8 +206,8 @@ public class MainMapperImpl {
     }
 
 
-    public List<LineDTO> lineToLineDTO(List<Line> ent) {
-        List<LineDTO> res = new ArrayList<>();
+    public List<RoadDTO> lineToLineDTO(List<Road> ent) {
+        List<RoadDTO> res = new ArrayList<>();
 
         for (var item : ent)
             res.add(lineToLineDTO((item)));

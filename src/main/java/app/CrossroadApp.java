@@ -25,7 +25,6 @@ public class CrossroadApp {
         RoadGenerationService roadService = context.getBean(RoadGenerationService.class);
         roadService.initRoad();
         run();
-
     }
 
     private static void run() {

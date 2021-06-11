@@ -1,6 +1,6 @@
 package app.domain.DTO;
 
-public enum DriveModel {
+public enum DriveLine {
     LEFT,
     STRAIGHT,
     RIGHT;

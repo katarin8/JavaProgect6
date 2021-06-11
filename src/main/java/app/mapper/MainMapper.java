@@ -1,11 +1,11 @@
 package app.mapper;
 
 import app.domain.DTO.CarsDTO;
-import app.domain.DTO.LineDTO;
+import app.domain.DTO.RoadDTO;
 import app.domain.DTO.RoadBlockDTO;
 import app.domain.DTO.TrafficLightDTO;
 import app.domain.model.Cars;
-import app.domain.model.Line;
+import app.domain.model.Road;
 import app.domain.model.RoadBlock;
 import app.domain.model.TrafficLight;
 import org.mapstruct.Mapper;
@@ -19,7 +19,7 @@ import java.util.Stack;
 public abstract class MainMapper {
     public Cars autoDtoToAuto(CarsDTO dto) {
         Cars cars = new Cars();
-        cars.setDriveModel(dto.getDriveModel());
+        cars.setDriveLine(dto.getDriveLine());
         cars.setHasTurned(dto.getHasTurned());
         cars.setSpeed(dto.getSpeed());
         cars.setId(dto.getId());
@@ -34,7 +34,7 @@ public abstract class MainMapper {
     public CarsDTO autoToAutoDTO(Cars ent) {
         CarsDTO dto = new CarsDTO();
         dto.setId(ent.getId());
-        dto.setDriveModel(ent.getDriveModel());
+        dto.setDriveLine(ent.getDriveLine());
         dto.setSpeed(ent.getSpeed());
         dto.setHasTurned(ent.getHasTurned());
 
@@ -49,7 +49,7 @@ public abstract class MainMapper {
     private CarsDTO autoToAutoDTOLazy(Cars ent) {
         CarsDTO dto = new CarsDTO();
         dto.setId(ent.getId());
-        dto.setDriveModel(ent.getDriveModel());
+        dto.setDriveLine(ent.getDriveLine());
         dto.setSpeed(ent.getSpeed());
         dto.setHasTurned(ent.getHasTurned());
 
@@ -95,7 +95,7 @@ public abstract class MainMapper {
             auto.setSpeed(dto.getAutomobile().getSpeed());
             auto.setRoadBlock(roadBlock);
             auto.setHasTurned(dto.getAutomobile().getHasTurned());
-            auto.setDriveModel(dto.getAutomobile().getDriveModel());
+            auto.setDriveLine(dto.getAutomobile().getDriveLine());
             auto.setId(dto.getAutomobile().getId());
             roadBlock.setCars(auto);
         }
@@ -125,7 +125,7 @@ public abstract class MainMapper {
             auto.setSpeed(dto.getAutomobile().getSpeed());
             auto.setRoadBlock(roadBlock);
             auto.setHasTurned(dto.getAutomobile().getHasTurned());
-            auto.setDriveModel(dto.getAutomobile().getDriveModel());
+            auto.setDriveLine(dto.getAutomobile().getDriveLine());
             auto.setId(dto.getAutomobile().getId());
             roadBlock.setCars(auto);
         }
@@ -242,10 +242,10 @@ public abstract class MainMapper {
         return res;
     }
 
-    public Line lineDtoToLine(LineDTO dto) { // only for generation
-        Line line = new Line();
-        line.setLineLength(dto.getLineLength());
-        line.setId(dto.getId());
+    public Road lineDtoToLine(RoadDTO dto) { // only for generation
+        Road road = new Road();
+        road.setLineLength(dto.getLineLength());
+        road.setId(dto.getId());
 
         List<RoadBlock> lines = new ArrayList<>();
         var block = dto.getStartBlock();
@@ -267,14 +267,14 @@ public abstract class MainMapper {
             lastBlock = newBlock;
         }
 
-        line.setBlockList(lines);
-        return line;
+        road.setBlockList(lines);
+        return road;
     }
 
-    public LineDTO lineToLineDTO(Line ent) { //only for initialisations
-        LineDTO lineDto = new LineDTO();
-        lineDto.setLineLength(ent.getLineLength());
-        lineDto.setId(ent.getId());
+    public RoadDTO lineToLineDTO(Road ent) { //only for initialisations
+        RoadDTO roadDto = new RoadDTO();
+        roadDto.setLineLength(ent.getLineLength());
+        roadDto.setId(ent.getId());
 
         ent.getBlockList().sort(Comparator.comparingLong(RoadBlock::getId));
 
@@ -285,8 +285,8 @@ public abstract class MainMapper {
             lastBlock = newBlock;
         }
 
-        lineDto.setStartBlock(lastBlock);
-        return lineDto;
+        roadDto.setStartBlock(lastBlock);
+        return roadDto;
     }
 //
 //    private RoadBlockDTO readAllDescendants(RoadBlock block){
@@ -351,8 +351,8 @@ public abstract class MainMapper {
     }
 
 
-    public List<Line> lineDtoToLine(List<LineDTO> dto) {
-        List<Line> res = new ArrayList<>();
+    public List<Road> lineDtoToLine(List<RoadDTO> dto) {
+        List<Road> res = new ArrayList<>();
 
         for (var item : dto)
             res.add(lineDtoToLine(item));
@@ -361,8 +361,8 @@ public abstract class MainMapper {
     }
 
 
-    public List<LineDTO> lineToLineDTO(List<Line> ent) {
-        List<LineDTO> res = new ArrayList<>();
+    public List<RoadDTO> lineToLineDTO(List<Road> ent) {
+        List<RoadDTO> res = new ArrayList<>();
 
         for (var item : ent)
             res.add(lineToLineDTO((item)));

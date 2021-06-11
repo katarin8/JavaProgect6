@@ -46,7 +46,7 @@ public class CarsRepoImpl implements CarsRepo {
     @Override
     public List<Cars> getAll() {
         Session session = sessionFactory.openSession();
-        var query = session.createQuery("from automobiles", Cars.class);
+        var query = session.createQuery("from cars", Cars.class);
         List<Cars> result = query.getResultList();
 
         result.forEach(res -> {
@@ -111,7 +111,7 @@ public class CarsRepoImpl implements CarsRepo {
     public void clear() {
         try (var session = sessionFactory.openSession()) {
             Transaction transaction = session.beginTransaction();
-            session.createQuery("delete from automobiles ").executeUpdate();
+            session.createQuery("delete from cars ").executeUpdate();
             transaction.commit();
         } catch (Exception ignored) {
         }

@@ -11,13 +11,13 @@ public class CarsDTO {
 
     private Long id;
     private Integer speed;
-    private DriveModel driveModel;
+    private DriveLine driveLine;
     private RoadBlockDTO roadBlock;
     private Boolean hasTurned = false;
 
-    public CarsDTO(Integer speed, DriveModel driveModel, RoadBlockDTO roadBlock) {
+    public CarsDTO(Integer speed, DriveLine driveLine, RoadBlockDTO roadBlock) {
         this.speed = speed;
-        this.driveModel = driveModel;
+        this.driveLine = driveLine;
         this.roadBlock = roadBlock;
     }
 

@@ -7,13 +7,13 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class LineDTO {
+public class RoadDTO {
 
     private Long id;
     private int lineLength;
-    private RoadBlockDTO startBlock; //соединять линии???
+    private RoadBlockDTO startBlock;
 
-    public LineDTO(RoadBlockDTO startBlock, int lineLength) {
+    public RoadDTO(RoadBlockDTO startBlock, int lineLength) {
         this.startBlock = startBlock;
         this.lineLength = lineLength;
     }

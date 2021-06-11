@@ -1,7 +1,7 @@
 package app.repository.impl;
 
-import app.domain.model.Line;
-import app.repository.LineRepo;
+import app.domain.model.Road;
+import app.repository.RoadRepo;
 import app.repository.RoadBlockRepo;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -14,22 +14,22 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public class LineRepoImpl implements LineRepo {
+public class RoadRepoImpl implements RoadRepo {
 
     private final SessionFactory sessionFactory;
     private final RoadBlockRepo roadBlockRepo;
 
     @Autowired
-    public LineRepoImpl(SessionFactory sessionFactory, RoadBlockRepo roadBlockRepo) {
+    public RoadRepoImpl(SessionFactory sessionFactory, RoadBlockRepo roadBlockRepo) {
         this.sessionFactory = sessionFactory;
         this.roadBlockRepo = roadBlockRepo;
     }
 
 
     @Override
-    public Optional<Line> get(Long id) {
+    public Optional<Road> get(Long id) {
         Session session = sessionFactory.openSession();
-        var result = session.get(Line.class, id);
+        var result = session.get(Road.class, id);
         if (result == null) {
             var c = 0;
         }
@@ -45,16 +45,16 @@ public class LineRepoImpl implements LineRepo {
 
 
     @Override
-    public List<Line> getAll() {
+    public List<Road> getAll() {
         Session session = sessionFactory.openSession();
-        var query = session.createQuery("from lines", Line.class);
+        var query = session.createQuery("from lines", Road.class);
         var result = query.getResultList();
 
-        result.forEach(line -> {
-            line.getBlockList().size();
+        result.forEach(road -> {
+            road.getBlockList().size();
 
-            for (int i = 0; i < line.getLineLength(); i++) {
-                line.getBlockList().set(i, roadBlockRepo.get(line.getBlockList().get(i).getId()).get());
+            for (int i = 0; i < road.getLineLength(); i++) {
+                road.getBlockList().set(i, roadBlockRepo.get(road.getBlockList().get(i).getId()).get());
             }
         });
 
@@ -63,21 +63,21 @@ public class LineRepoImpl implements LineRepo {
     }
 
     @Override
-    public void save(Line line) {
+    public void save(Road road) {
         Session session = sessionFactory.openSession();
         Transaction transaction = session.beginTransaction();
-        session.persist(line);
+        session.persist(road);
         transaction.commit();
         session.close();
     }
 
     @Override
-    public void update(Line line) {
-        var current = get(line.getId());
+    public void update(Road road) {
+        var current = get(road.getId());
         Session session = sessionFactory.openSession();
         var trans = session.beginTransaction();
         //session.evict(current);
-        session.update(line);
+        session.update(road);
         trans.commit();
         session.close();
     }
@@ -86,17 +86,17 @@ public class LineRepoImpl implements LineRepo {
     public void delete(Long id) {
         var session = sessionFactory.openSession();
         var trans = session.beginTransaction();
-        var curr = session.get(Line.class, id);
+        var curr = session.get(Road.class, id);
         session.delete(curr);
         trans.commit();
         session.close();
     }
 
     @Override
-    public void delete(Line line) {
+    public void delete(Road road) {
         var session = sessionFactory.openSession();
         var transaction = session.beginTransaction();
-        var curr = session.get(Line.class, line.getId());
+        var curr = session.get(Road.class, road.getId());
         session.delete(curr);
         transaction.commit();
         session.close();

@@ -9,9 +9,9 @@ import java.util.List;
 @Data
 @Entity(name = "lines")
 @NoArgsConstructor
-public class Line {
+public class Road {
     @Id
-    @Column(name = "id")
+    @Column(name = "ID")
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
@@ -21,8 +21,4 @@ public class Line {
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
     private List<RoadBlock> blockList;
 
-    public Line(List<RoadBlock> blockList, int lineLength) {
-        this.blockList = blockList;
-        this.lineLength = lineLength;
-    }
 }

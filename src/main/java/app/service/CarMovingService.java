@@ -42,10 +42,10 @@ public class CarMovingService {
                     moveCar(currRoadBlockDTO, null, auto);
                     carsToRemove.add(auto.getId());
 
-                } else if (currRoadBlockDTO.getAutomobileLinksList()[auto.getDriveModel().ordinal()] != null &&
-                        currRoadBlockDTO.getAutomobileLinksList()[auto.getDriveModel().ordinal()].getAutomobile() == null && !auto.getHasTurned()) {
+                } else if (currRoadBlockDTO.getAutomobileLinksList()[auto.getDriveLine().ordinal()] != null &&
+                        currRoadBlockDTO.getAutomobileLinksList()[auto.getDriveLine().ordinal()].getAutomobile() == null && !auto.getHasTurned()) {
 
-                    RoadBlockDTO nextRoadBlockDTO = currRoadBlockDTO.getAutomobileLinksList()[auto.getDriveModel().ordinal()];
+                    RoadBlockDTO nextRoadBlockDTO = currRoadBlockDTO.getAutomobileLinksList()[auto.getDriveLine().ordinal()];
 
                     if (currRoadBlockDTO.getIsCrossRoad() && !auto.getHasTurned())
                         auto.setHasTurned(true);
@@ -53,7 +53,7 @@ public class CarMovingService {
                     moveCar(currRoadBlockDTO, nextRoadBlockDTO, auto);
 
                 } else if (currRoadBlockDTO.getAutomobileLinksList()[1] != null &&
-                        (currRoadBlockDTO.getAutomobileLinksList()[auto.getDriveModel().ordinal()] == null || auto.getHasTurned())) {
+                        (currRoadBlockDTO.getAutomobileLinksList()[auto.getDriveLine().ordinal()] == null || auto.getHasTurned())) {
 
                     moveCar(currRoadBlockDTO, currRoadBlockDTO.getAutomobileLinksList()[1], auto);
                 }
@@ -75,7 +75,6 @@ public class CarMovingService {
             return;
         }
 
-        //aaaaa
         if (nextBlock.getAutomobile() == null &&
                 nextBlock.getTrafficLightState().ordinal() == TrafficLightState.GREEN.ordinal()) {
 

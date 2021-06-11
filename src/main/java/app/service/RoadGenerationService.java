@@ -1,12 +1,12 @@
 package app.service;
 
 import app.component.RoadComponent;
-import app.domain.DTO.LineDTO;
+import app.domain.DTO.RoadDTO;
 import app.domain.DTO.RoadBlockDTO;
 import app.domain.DTO.TrafficLightDTO;
 import app.domain.DTO.TrafficLightState;
 import app.mapper.MainMapper;
-import app.repository.LineRepo;
+import app.repository.RoadRepo;
 import app.repository.RoadBlockRepo;
 import app.repository.TrafficLightRepo;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,18 +19,18 @@ import java.util.List;
 public class RoadGenerationService {
     private final RoadComponent roadComponent;
 
-    private final LineRepo lineRepo;
+    private final RoadRepo roadRepo;
     private final RoadBlockRepo roadBlockRepo;
     private final TrafficLightRepo trafficLightRepo;
 
     private final MainMapper mapper;
 
     @Autowired
-    public RoadGenerationService(LineRepo lineRepo,
+    public RoadGenerationService(RoadRepo roadRepo,
                                  RoadComponent roadComponent,
                                  RoadBlockRepo roadBlockRepo,
                                  TrafficLightRepo trafficLightRepo, MainMapper mapper) {
-        this.lineRepo = lineRepo;
+        this.roadRepo = roadRepo;
         this.roadComponent = roadComponent;
         this.roadBlockRepo = roadBlockRepo;
         this.trafficLightRepo = trafficLightRepo;
@@ -50,21 +50,21 @@ public class RoadGenerationService {
     private void generateRoad() {
         //инициирует дороги и связывает однонаправленные
 
-        List<LineDTO> lines = new ArrayList<>();
+        List<RoadDTO> lines = new ArrayList<>();
 
         for (int index = 0; index < 4; index++) {
             for (int j = 0; j < roadComponent.getLinesPerSide(); j++) {
-                //lineRepository.save(new Line(roadComponent.getLineLength()));
+                //lineRepository.save(new Road(roadComponent.getLineLength()));
                 initLine(roadComponent.getLineLength());
 
                 if (j > 0) {
-                    var firstLine = lineRepo.get((long) (index * roadComponent.getLinesPerSide() + j)).get();
+                    var firstLine = roadRepo.get((long) (index * roadComponent.getLinesPerSide() + j)).get();
                     if (!lines.stream().anyMatch(dto -> dto.getId() == firstLine.getId()))
                         lines.add(mapper.lineToLineDTO(firstLine));
 
                     var aaa = mapper.lineToLineDTO(firstLine);
 
-                    var secLine = lineRepo.get((long) (index * roadComponent.getLinesPerSide() + j + 1)).get(); // FIXED COUNTER
+                    var secLine = roadRepo.get((long) (index * roadComponent.getLinesPerSide() + j + 1)).get(); // FIXED COUNTER
                     if (!lines.stream().anyMatch(dto -> dto.getId() == secLine.getId()))
                         lines.add(mapper.lineToLineDTO(secLine));
 
@@ -75,7 +75,7 @@ public class RoadGenerationService {
             }
         }
 
-        //  List<Line> linesList = lineRepository.getAll();
+        //  List<Road> linesList = lineRepository.getAll();
         final int LINES_PER_SIDE = roadComponent.getLinesPerSide();
         final int LINE_LENGTH = roadComponent.getLineLength();
         final int LINE_COUNT = roadComponent.getLinesPerSide() * 4;
@@ -121,7 +121,7 @@ public class RoadGenerationService {
             curr = next;
         }
 
-        lineRepo.save(mapper.lineDtoToLine(new LineDTO(startBlock, lineLength)));
+        roadRepo.save(mapper.lineDtoToLine(new RoadDTO(startBlock, lineLength)));
     }
 
     private void linkRoadBlocksByIndex(RoadBlockDTO from, RoadBlockDTO to, int index) {
@@ -132,8 +132,8 @@ public class RoadGenerationService {
         roadBlockRepo.update(mapper.blockDtoToBlock(from));
     }
 
-    private RoadBlockDTO getRoadBlockShiftByIndex(RoadBlockDTO stratBlock, int index) {
-        RoadBlockDTO block = stratBlock;
+    private RoadBlockDTO getRoadBlockShiftByIndex(RoadBlockDTO startBlock, int index) {
+        RoadBlockDTO block = startBlock;
         for (int i = 0; i < index; i++)
             block = block.getAutomobileLinksList()[1];
 
@@ -150,7 +150,7 @@ public class RoadGenerationService {
 
             for (int j = 0; j < roadComponent.getLinesPerSide(); j++) {
                 RoadBlockDTO block = getRoadBlockShiftByIndex(
-                        mapper.lineToLineDTO(lineRepo.get((long) (index * roadComponent.getLinesPerSide() + j + 1)).get()).getStartBlock(), //fixed
+                        mapper.lineToLineDTO(roadRepo.get((long) (index * roadComponent.getLinesPerSide() + j + 1)).get()).getStartBlock(), //fixed
                         (LINE_LENGTH / 2 - LINES_PER_SIDE - 2 - TRAFFIC_LIGHT_DIST));
 
                 roadBlockDTOS.add(block);
@@ -168,11 +168,10 @@ public class RoadGenerationService {
 
             var res = mapper.trafficLightDtoTotrafficLight(new TrafficLightDTO(roadBlockDTOS, TrafficLightState.RED));
             trafficLightRepo.save(res);
-            var c = 0;
         }
     }
 
-    private void linkCoDirectionalLines(LineDTO left, LineDTO right, int targetLineCount) {
+    private void linkCoDirectionalLines(RoadDTO left, RoadDTO right, int targetLineCount) {
         if (left.getLineLength() != right.getLineLength())
             return;
 
